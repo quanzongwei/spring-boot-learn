@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>userList</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"></link>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function del() {
+            if (confirm("您确定要删除吗？")) {
+                return true;
+            }
+            return false;
+        }
+        /*]]>*/
+    </script>
+</head>
+<body class="container">
+<br/>
+<h1>股票列表</h1>
+<br/><br/>
+<!--这种查询方式居然可行, 我也是醉了-->
+<div class="with:80%">
+    <form class="form-horizontal"   th:action="@{/stock/list}" th:object="${stockLogPO}"  method="post">
+        <div class="form-group">
+            <label for="stockName" class="col-sm-2 control-label">股票名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="stockName"  id="stockName" th:value="*{stockName}" placeholder="stockName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="logType" class="col-sm-2 control-label">日志类型</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="logType"  id="logType" th:value="*{logType}" placeholder="logType(BUY SALE AUTO_UP SHARE_RED)"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" value="查询" class="btn btn-info" />
+            </div>
+        </div>
+    </form>
+</div>
+<div class="with:80%">
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>股票名称</th>
+            <th>股票类型</th>
+            <th>价格</th>
+            <th>股数</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderlist : ${stockTables}">
+<!--            <th scope="row" th:text="${orderlistStat.index + 1}">1</th>-->
+            <td th:text="${orderlist.id}"></td>
+            <td th:text="${orderlist.stockName}"></td>
+            <td th:text="${orderlist.logType}"></td>
+            <td th:text="${orderlist.price}"></td>
+            <td th:text="${orderlist.amount}"></td>
+            <td th:text="${orderlist.createTime}"></td>
+            <td><a th:href="@{/stock/edit(id=${orderlist.id})}">编辑</a></td>
+            <td><a th:onclick="return del()" th:href="@{/stock/delete(id=${orderlist.id})}">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 control-label">
+        <a href="/add" th:href="@{/stock/add}" class="btn btn-info">add</a>
+    </div>
+</div>
+
+<div class="modal-footer no-margin-top">
+    <ul class="pagination pull-right no-margin">
+
+        <!-- 首页 -->
+        <li>
+            <a th:href="'/stock/list?pageNum=0'">首页</a>
+        </li>
+
+        <!-- 上一页 -->
+        <li th:if="${stockTables.hasPrevious()}">
+            <a th:href="'/stock/list?pageNum=' + ${stockTables.previousPageable().getPageNumber()}" th:text="上一页"></a>
+        </li>
+
+        <!-- 中间页 -->
+        <li th:each="pageNum:${#numbers.sequence(0, stockTables.getTotalPages() - 1)}">
+            <a th:href="'/stock/list?pageNum=' + ${pageNum}" th:text="${pageNum + 1}" th:if="${pageNum ne stockTables.pageable.getPageNumber()}"></a>
+            <a th:href="'/stock/list?pageNum=' + ${pageNum}" th:text="${pageNum + 1}" th:if="${pageNum eq stockTables.pageable.getPageNumber()}" th:style="'font-weight:bold;background: #6faed9;'"></a>
+        </li>
+
+        <!-- 下一页 -->
+        <li th:if="${stockTables.hasNext()}">
+            <a th:href="'/stock/list?pageNum=' + ${stockTables.nextPageable().getPageNumber()}" th:text="下一页"></a>
+        </li>
+
+        <!-- 尾页 -->
+        <li>
+            <a th:href="'/stock/list?pageNum=' + ${stockTables.getTotalPages() - 1}">尾页</a>
+        </li>
+
+    </ul>
+</div>
+</body>
+</html>

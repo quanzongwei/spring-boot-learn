@@ -26,10 +26,10 @@ public class MonitorTableController {
     @Resource
     MonitorTableService monitorTableService;
 
-    @RequestMapping("/")
-    public String index(){
-        return "redirect:/list";
-    }
+//    @RequestMapping("/")
+//    public String index(){
+//        return "redirect:/list";
+//    }
 
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "pageNum", defaultValue = "0") int pageNum, @RequestParam(value = "pageSize", defaultValue = "2") int pageSize){

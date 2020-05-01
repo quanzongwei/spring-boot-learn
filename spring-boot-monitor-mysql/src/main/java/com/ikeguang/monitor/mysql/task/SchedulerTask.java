@@ -27,7 +27,7 @@ import java.util.Map;
  * @ version: v1.0.0
  * @ description:
  */
-@Component
+//@Component
 public class SchedulerTask {
 
     private static final Logger logger = LoggerFactory.getLogger(SchedulerTask.class.getSimpleName());
